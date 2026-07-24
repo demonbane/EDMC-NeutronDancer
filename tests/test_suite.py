@@ -540,6 +540,14 @@ class TestShipyardSwap:
 
         assert repr(ship) == f"ID {ship.id}, name {ship.name}, type {ship.type}, unladen range {ship.range:.2f}ly)"
 
+    def test_ship_whitespace_name(self, harness:TestHarness):
+        """Fall back to the ship ident when ShipName contains only whitespace."""
+        entry:dict = dict(harness.events['shipyard_swap'][0])
+        entry['ShipName'] = ' '
+        ship:Ship = Ship(entry)
+
+        assert ship.name == entry['ShipIdent']
+
     def test_swap_existing_ship(self, harness:TestHarness):
         """Test swapping to a previously loaded ship."""
         # Load multiple ships

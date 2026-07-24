@@ -34,7 +34,7 @@ class Ship:
         self.id = str(entry.get('ShipID', ''))
         self.type = entry.get('Ship', '')
         self.ident = entry.get('ShipIdent', '')
-        self.name = entry.get('ShipName', '') or self.ident or self.type
+        self.name = entry.get('ShipName', '').strip() or self.ident or self.type
 
         fsd:dict = [m for m in entry.get('Modules', []) if m['Slot'] == 'FrameShiftDrive'][0]
         fsd_type:str = fsd['Item']
