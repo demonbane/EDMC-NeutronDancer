@@ -116,6 +116,17 @@ class TestStateManagement:
         """Call plugin load"""
         harness.plugin.router._load()
 
+    def test_load_empty_ship(self, harness:TestHarness) -> None:
+        """An empty saved ship should remain unset until a Loadout event."""
+        harness.plugin.router._from_dict({
+            'route': [[], [], -1],
+            'ship': {},
+            'ships': {}
+        })
+
+        assert harness.plugin.router.ship is None
+        harness.plugin.ui.update_cargo(0)
+
     def test_save(self, harness:TestHarness) -> None:
         """Call save"""
         harness.plugin.router.save()

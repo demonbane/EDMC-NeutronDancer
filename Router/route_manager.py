@@ -467,7 +467,8 @@ class Router():
         r = dict.get('route', ([], [], -1))
         (hdrs, route, offset) = r[0:3]
         Context.route = Route(hdrs, route, offset)
-        self.ship = Ship(dict.get('ship', {}))
+        ship = dict.get('ship', {})
+        self.ship = Ship(ship) if ship else None
         self.ships = {k: Ship(data) for k, data in dict.get('ships', {}).items()}
 
         # Migrate
