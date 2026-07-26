@@ -398,6 +398,30 @@ class TestImporting:
         assert harness.plugin.router.dest == 'Bleae Thua HF-R d4-116 B 7'
 
 
+class TestClearing:
+    """Route clearing and system dropdown behavior."""
+
+    def test_system_fields_are_editable_dropdowns(self, harness:TestHarness) -> None:
+        assert str(harness.plugin.ui.source_ac['state']) == 'normal'
+        assert str(harness.plugin.ui.dest_ac['state']) == 'normal'
+        assert 'Sol' in harness.plugin.ui.source_ac['values']
+        assert 'Sol' in harness.plugin.ui.dest_ac['values']
+
+    def test_completed_route_is_reversed_and_persisted(self, harness:TestHarness) -> None:
+        harness.plugin.router.src = 'Old Start'
+        harness.plugin.router.dest = 'Current System'
+        harness.plugin.router.system = 'Current System'
+
+        with patch('Router.ui.confirmDialog.askyesno', return_value=True):
+            harness.plugin.ui._clear_route()
+
+        assert harness.plugin.route.route == []
+        assert harness.plugin.router.src == 'Current System'
+        assert harness.plugin.router.dest == 'Old Start'
+        assert harness.plugin.ui.source_ac.get() == 'Current System'
+        assert harness.plugin.ui.dest_ac.get() == 'Old Start'
+
+
 class TestExporting:
     """CSV Export"""
     def test_export_noroute(self, harness:TestHarness) -> None:

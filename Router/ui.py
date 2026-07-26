@@ -236,6 +236,7 @@ class UI():
 
         if Context.router.system != '':
             srcmenu[Context.router.system] = [self.menu_callback, 'src']
+            destmenu[Context.router.system] = [self.menu_callback, 'dest']
         for sys in Context.router.history:
             if sys not in srcmenu:
                 srcmenu[sys] = [self.menu_callback, 'src']
@@ -247,7 +248,7 @@ class UI():
         row +=1; col = 0
 
         # First row
-        self.gal_source_ac = th.Autocompleter(plot_fr, lbls["source_system"], width=30, menu=srcmenu, func=self.query_systems)
+        self.gal_source_ac = th.EditableComboBox(plot_fr, lbls["source_system"], width=30, values=list(srcmenu))
         th.Tooltip(self.gal_source_ac, tts["source_system"])
         if Context.router.src != '': self.set_entry(self.gal_source_ac, Context.router.src)
         self.gal_source_ac.grid(row=row, column=col, columnspan=2, padx=5, pady=5)
@@ -264,7 +265,7 @@ class UI():
 
         # Row two
         row += 1; col = 0
-        self.gal_dest_ac = th.Autocompleter(plot_fr, lbls["dest_system"], width=30, menu=destmenu, func=self.query_systems)
+        self.gal_dest_ac = th.EditableComboBox(plot_fr, lbls["dest_system"], width=30, values=list(destmenu))
         th.Tooltip(self.gal_dest_ac, tts["dest_system"])
         if Context.router.dest != '': self.set_entry(self.gal_dest_ac, Context.router.dest)
         self.gal_dest_ac.grid(row=row, column=col, columnspan=2, padx=5, pady=5)
@@ -354,6 +355,7 @@ class UI():
 
         if Context.router.system != '':
             srcmenu[Context.router.system] = [self.menu_callback, 'src']
+            destmenu[Context.router.system] = [self.menu_callback, 'dest']
         for sys in Context.router.history:
             if sys not in srcmenu:
                 srcmenu[sys] = [self.menu_callback, 'src']
@@ -373,7 +375,7 @@ class UI():
         self._plot_switcher(plot_fr, row, col)
 
         row += 1; col = 0
-        self.source_ac = th.Autocompleter(plot_fr, lbls["source_system"], width=30, menu=srcmenu, func=self.query_systems)
+        self.source_ac = th.EditableComboBox(plot_fr, lbls["source_system"], width=30, values=list(srcmenu))
         th.Tooltip(self.source_ac, tts["source_system"])
         if Context.router.src != '': self.set_entry(self.source_ac, Context.router.src)
         self.source_ac.grid(row=row, column=col, columnspan=2)
@@ -386,7 +388,7 @@ class UI():
         self.range_entry.set_text(str(params.get('range', "32.00")), str(params.get('range', "32.00")) == "32.00")
 
         row += 1; col = 0
-        self.dest_ac = th.Autocompleter(plot_fr, lbls["dest_system"], width=30, menu=destmenu, func=self.query_systems)
+        self.dest_ac = th.EditableComboBox(plot_fr, lbls["dest_system"], width=30, values=list(destmenu))
         th.Tooltip(self.dest_ac, tts["dest_system"])
         if Context.router.dest != '': self.set_entry(self.dest_ac, Context.router.dest)
         self.dest_ac.grid(row=row, column=col, columnspan=2)
@@ -612,7 +614,7 @@ class UI():
         self.menu_callback('ship', ship_name)
 
 
-    def set_entry(self, which:th.Autocompleter|th.Placeholder|None, value:str) -> None:
+    def set_entry(self, which:th.Autocompleter|th.EditableComboBox|th.Placeholder|None, value:str) -> None:
         """ Set an autocompleter or placeholder entry's text and style """
         if which == None: return
         which.delete(0, tk.END)
@@ -667,8 +669,13 @@ class UI():
         # Reverse the route
         if Context.router.dest == Context.router.system:
             Debug.logger.debug(f"Reversing route as we're at the end")
-            self.dest_ac.set_text(Context.router.src, False)
-            self.source_ac.set_text(Context.router.dest, False)
+            previous_src:str = Context.router.src
+            Context.router.src = Context.router.dest
+            Context.router.dest = previous_src
+            self.dest_ac.set_text(Context.router.dest, False)
+            self.source_ac.set_text(Context.router.src, False)
+            self.gal_dest_ac.set_text(Context.router.dest, False)
+            self.gal_source_ac.set_text(Context.router.src, False)
 
         self.show_frame(Context.router.last_plot)
         Context.router.clear_route()

@@ -4,6 +4,7 @@
 
 ### New Features
 
+* Route source and destination fields are now editable dropdowns with current and recent systems
 * Added customizable progress text to overlay
 * Added optional progress bar to the jump overlay
 * Refuel reminder is automatically removed once you've refueled

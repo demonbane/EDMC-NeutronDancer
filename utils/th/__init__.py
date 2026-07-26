@@ -8,12 +8,13 @@ from theme import theme # type: ignore
 from config import config # type: ignore
 
 from .autocompleter import Autocompleter
+from .editable_combobox import EditableComboBox
 from .placeholder import Placeholder
 from .tooltip import Tooltip
 
 from utils.debug import Debug
 
-__all__ = ["TopLevel", "Frame", "LabelFrame", "Label", "Button", "Radiobutton", "ComboBox", "Listbox", "Checkbutton", "Scale", "Tooltip", "Autocompleter", "Placeholder"]
+__all__ = ["TopLevel", "Frame", "LabelFrame", "Label", "Button", "Radiobutton", "ComboBox", "EditableComboBox", "Listbox", "Checkbutton", "Scale", "Tooltip", "Autocompleter", "Placeholder"]
 
 """ A set of UI objects to handle themed widgets for dealing with EDMC dark mode """
 class Base:
