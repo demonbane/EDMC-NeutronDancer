@@ -407,6 +407,21 @@ class TestClearing:
         assert 'Sol' in harness.plugin.ui.source_ac['values']
         assert 'Sol' in harness.plugin.ui.dest_ac['values']
 
+    def test_jump_adds_current_system_to_dropdowns(self, harness:TestHarness) -> None:
+        system:str = 'New Jump System'
+        harness.plugin.route.route = []
+
+        harness.fire_event({
+            'event': 'FSDJump',
+            'StarSystem': system,
+            'JumpDist': 10.0
+        })
+
+        assert harness.plugin.ui.source_ac['values'][0] == system
+        assert harness.plugin.ui.dest_ac['values'][0] == system
+        assert harness.plugin.ui.gal_source_ac['values'][0] == system
+        assert harness.plugin.ui.gal_dest_ac['values'][0] == system
+
     def test_completed_route_is_reversed_and_persisted(self, harness:TestHarness) -> None:
         harness.plugin.router.src = 'Old Start'
         harness.plugin.router.dest = 'Current System'

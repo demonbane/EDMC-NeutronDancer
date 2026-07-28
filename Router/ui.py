@@ -622,6 +622,15 @@ class UI():
         which.set_default_style()
 
 
+    def update_system_dropdowns(self, system:str) -> None:
+        """Add the current system to every route system dropdown."""
+        if system == '': return
+
+        for dropdown in (self.source_ac, self.dest_ac, self.gal_source_ac, self.gal_dest_ac):
+            values:list[str] = list(dropdown['values'])
+            dropdown.set_menu([system] + [value for value in values if value != system])
+
+
     def switch_ship(self, ship:Ship) -> None:
         """ Update the plotter items when the ship changes """
 
